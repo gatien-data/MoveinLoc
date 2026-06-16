@@ -62,3 +62,15 @@ Elle recensera à minima,
     - le temps de réponse de l'actualisation des données
 
 
+#------------ CATEGORIES --------------
+Thématique
+Nom
+Adresse
+Horaires
+Date début
+Date fin
+URL de l'évènement
+Tranche d'age
+Prix
+Image / Photo
+Description
