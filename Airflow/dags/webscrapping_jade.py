@@ -671,6 +671,35 @@ def concat_df():
         [df_loire, df_tourisme, df_jade, df_gatien],
         ignore_index=True
     )
+
+    def getcoordinates(adresse):
+        url = "https://data.geopf.fr/geocodage/search/"
+
+        for _ in range(3):
+            try:
+                r = requests.get(
+                    url,
+                    params={"q": adresse},
+                    timeout=20
+                )
+                r.raise_for_status()
+
+                data = r.json()
+                return data["features"][0]["geometry"]["coordinates"][::-1]
+
+            except requests.exceptions.Timeout:
+                time.sleep(2)
+
+            except (KeyError, IndexError):
+                return None
+
+            except requests.exceptions.RequestException:
+                return None
+
+        return None
+
+
+    df["coor"] = df["adresse complete"].apply(getcoordinates)
     df = df.drop_duplicates(subset=["nom_event"])
     df.to_csv("/opt/airflow/data/events.csv", index=False)
 
