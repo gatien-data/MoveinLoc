@@ -430,15 +430,27 @@ if st.session_state["lat"] is not None:
                     )
 
                 else:
-                    img = Image.open(image_theme(event["theme"]))
-                    img = resize_cover(img)
-
-                    img_base64 = image_to_base64(img)
+                    img_path = image_theme(event["theme"])
 
                     st.markdown(
                         f"""
-                        <img src="data:image/png;base64,{img_base64}"
-                        style="width:100%; height:180px; object-fit:cover; border-radius:8px;">
+                        <div style="
+                            width:100%;
+                            height:180px;
+                            overflow:hidden;
+                            border-radius:8px;
+                            display:flex;
+                            justify-content:center;
+                            align-items:center;
+                            background:#f5f5f5;
+                        ">
+                            <img src="{img_path}"
+                            style="
+                                max-width:100%;
+                                max-height:180px;
+                                object-fit:contain;
+                            ">
+                        </div>
                         """,
                         unsafe_allow_html=True
                     )
