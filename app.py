@@ -1,6 +1,5 @@
 import streamlit as st
 import folium
-from streamlit_geolocation import streamlit_geolocation
 from streamlit_folium import st_folium
 import pandas as pd
 import requests
