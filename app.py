@@ -159,68 +159,6 @@ if st.session_state["cp"] is not None:
                 st.session_state["cp"],
                 st.session_state["rayon"])
 
-# ==========================================
-#       WEBSCRAPPING
-# ==========================================
-
-#MOIS = {
-#    1:"janvier",2:"février",3:"mars",4:"avril",
-#    5:"mai",6:"juin",7:"juillet",8:"août",
-#    9:"septembre",10:"octobre",11:"novembre",12:"décembre"
-#}
-#@st.cache_data(ttl=3600)
-#def scrape_agendaculturel(ville):
-#    url = f"https://www.agendaculturel.fr/?q={ville}"
-#    try:
-#        html = requests.get(url, timeout=10)
-#        soup = BeautifulSoup(html.text, "html.parser")
-#    except:
-#        return pd.DataFrame()
-#    events = []
-#    for card in soup.select("div.card-body"):
-#        data = {}
-#
-#        # ---------------- DATE ----------------
-#        badge = card.select_one("span.card-main-badge")
-#        date_d = None
-#        date_f = None
-#        if badge:
-#            times = badge.find_all("time")
-#            if len(times) == 1:
-#                d = datetime.fromisoformat(times[0]["datetime"])
-#                date_d = d
-#                date_f = d
-#            elif len(times) == 2:
-#                date_d = datetime.fromisoformat(times[0]["datetime"])
-#                date_f = datetime.fromisoformat(times[1]["datetime"])
-#
-#        # ---------------- TITRE ----------------
-#        titre = card.select_one("[itemprop='name']")
-#        titre = titre.get_text(strip=True) if titre else ""
-#
-#        # ---------------- LIEU ----------------
-#        lieu = card.select_one('[itemprop="location"] [itemprop="name"]')
-#        lieu = lieu.get_text(strip=True) if lieu else ""
-#
-#        # ---------------- DESCRIPTION ----------------
-#        desc = card.select_one('[itemprop="description"]')
-#        desc = desc.get_text(" ", strip=True) if desc else ""
-#
-#        adresse_complete = f"{lieu}, {ville}"
-#
-#        events.append({
-#            "nom_event": titre,
-#            "adresse": lieu,
-#            "adresse_complete": adresse_complete,
-#            "ville": ville,
-#            "date_d": date_d,
-#            "date_f": date_f,
-#            "description": desc,
-#            "coor": None,
-#            "source": "AgendaCulturel"
-#        })
-#
-#    return pd.DataFrame(events)
 
 # ==========================================
 #           CARTE
@@ -229,24 +167,8 @@ if st.session_state["cp"] is not None:
 if st.session_state["lat"] is not None:
     if st.session_state['liste_ville']:
                 
-        df = pd.read_csv("data/df_theme.csv")
+        df = pd.read_csv("Airflow/data/df_final.csv")
         
-        # ==========================================
-        #                  WEBSCRAPPING
-        # ==========================================
-
-        #with st.spinner("Recherche AgendaCulturel..."):
-        #    liste_agenda = []
-        #    for ville in st.session_state["liste_ville"]:
-        #        df_ville = scrape_agendaculturel(ville)
-        #        if not df_ville.empty:
-        #            liste_agenda.append(df_ville)
-        #            time.sleep(0.3)      # évite de bombarder le site
-        #    if liste_agenda:
-        #        df_agenda = pd.concat(liste_agenda, ignore_index=True)
-        #        df = pd.concat([df, df_agenda], ignore_index=True)
-        # ==========================================
-
 
         # DATA FILTRE PAR LES VILLES
         df["ville"] = df["ville"].apply(lambda x: str(str(x).lower().capitalize()))
