@@ -420,9 +420,14 @@ if st.session_state["lat"] is not None:
 
                     #st.image(img, use_container_width=True)
             
-                    img = image_theme(event["theme"])
-                    st.write(type(img))
-                    st.write(img)
+            
+                    img_path = image_theme(event["theme"])
+
+                    img = Image.open(img_path)
+
+                    img = resize_cover(img)
+
+                    st.image(img, use_container_width=True)
 
                 st.markdown(f"**{event['nom_event']}**")
                 if has_value(event["theme"]):
