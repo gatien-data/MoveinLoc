@@ -1,5 +1,6 @@
 import streamlit as st
 import folium
+from streamlit_geolocation import streamlit_geolocation
 from streamlit_folium import st_folium
 import pandas as pd
 import requests
@@ -159,6 +160,68 @@ if st.session_state["cp"] is not None:
                 st.session_state["cp"],
                 st.session_state["rayon"])
 
+# ==========================================
+#       WEBSCRAPPING
+# ==========================================
+
+#MOIS = {
+#    1:"janvier",2:"février",3:"mars",4:"avril",
+#    5:"mai",6:"juin",7:"juillet",8:"août",
+#    9:"septembre",10:"octobre",11:"novembre",12:"décembre"
+#}
+#@st.cache_data(ttl=3600)
+#def scrape_agendaculturel(ville):
+#    url = f"https://www.agendaculturel.fr/?q={ville}"
+#    try:
+#        html = requests.get(url, timeout=10)
+#        soup = BeautifulSoup(html.text, "html.parser")
+#    except:
+#        return pd.DataFrame()
+#    events = []
+#    for card in soup.select("div.card-body"):
+#        data = {}
+#
+#        # ---------------- DATE ----------------
+#        badge = card.select_one("span.card-main-badge")
+#        date_d = None
+#        date_f = None
+#        if badge:
+#            times = badge.find_all("time")
+#            if len(times) == 1:
+#                d = datetime.fromisoformat(times[0]["datetime"])
+#                date_d = d
+#                date_f = d
+#            elif len(times) == 2:
+#                date_d = datetime.fromisoformat(times[0]["datetime"])
+#                date_f = datetime.fromisoformat(times[1]["datetime"])
+#
+#        # ---------------- TITRE ----------------
+#        titre = card.select_one("[itemprop='name']")
+#        titre = titre.get_text(strip=True) if titre else ""
+#
+#        # ---------------- LIEU ----------------
+#        lieu = card.select_one('[itemprop="location"] [itemprop="name"]')
+#        lieu = lieu.get_text(strip=True) if lieu else ""
+#
+#        # ---------------- DESCRIPTION ----------------
+#        desc = card.select_one('[itemprop="description"]')
+#        desc = desc.get_text(" ", strip=True) if desc else ""
+#
+#        adresse_complete = f"{lieu}, {ville}"
+#
+#        events.append({
+#            "nom_event": titre,
+#            "adresse": lieu,
+#            "adresse_complete": adresse_complete,
+#            "ville": ville,
+#            "date_d": date_d,
+#            "date_f": date_f,
+#            "description": desc,
+#            "coor": None,
+#            "source": "AgendaCulturel"
+#        })
+#
+#    return pd.DataFrame(events)
 
 # ==========================================
 #           CARTE
@@ -167,19 +230,37 @@ if st.session_state["cp"] is not None:
 if st.session_state["lat"] is not None:
     if st.session_state['liste_ville']:
                 
-        df = pd.read_csv("data/df.csv")
+        df = pd.read_csv("data/df_flanerbouger.csv")
         
+        # ==========================================
+        #                  WEBSCRAPPING
+        # ==========================================
+
+        #with st.spinner("Recherche AgendaCulturel..."):
+        #    liste_agenda = []
+        #    for ville in st.session_state["liste_ville"]:
+        #        df_ville = scrape_agendaculturel(ville)
+        #        if not df_ville.empty:
+        #            liste_agenda.append(df_ville)
+        #            time.sleep(0.3)      # évite de bombarder le site
+        #    if liste_agenda:
+        #        df_agenda = pd.concat(liste_agenda, ignore_index=True)
+        #        df = pd.concat([df, df_agenda], ignore_index=True)
+        # ==========================================
+
 
         # DATA FILTRE PAR LES VILLES
         df["ville"] = df["ville"].apply(lambda x: str(str(x).lower().capitalize()))
-        df = df[df['ville'].isin(st.session_state['liste_ville'])]
+        df = df[df['ville'].isin(st.session_state['liste_ville'])].reset_index(drop=True)
 
         # DATA FILTRE PAR LES DATES
         choix_debut = pd.Timestamp(selected_date_range[0])
         choix_fin = pd.Timestamp(selected_date_range[1])
         df["date_d"] = pd.to_datetime(df["date_d"])
         df["date_f"] = pd.to_datetime(df["date_f"])
-        df = df[(df["date_d"] <= choix_fin) & (df["date_f"] >= choix_debut)]
+        df = df[(df["date_d"] <= choix_fin) & (df["date_f"] >= choix_debut)].reset_index(drop=True)
+
+       
         
         # ==========================================
         # GEOCODAGE Manquant (evite les appel repetés)
@@ -272,15 +353,7 @@ if st.session_state["lat"] is not None:
                 idx_proche = distances.idxmin()
                 coor_cible = df.loc[idx_proche, "coor_key"]
                 indices_selectionnes = df[df["coor_key"] == coor_cible].index.tolist()
-             # ==========================================
-        # DATA FILTRE PAR LES DATES
-            
-        choix_debut = pd.Timestamp(selected_date_range[0])
-        choix_fin = pd.Timestamp(selected_date_range[1])
-        df["date_d"] = pd.to_datetime(df["date_d"])
-        df["date_f"] = pd.to_datetime(df["date_f"])
-        df = df[(df["date_d"] <= choix_fin) & (df["date_f"] >= choix_debut)]
-        df = df.sort_values("date_d").reset_index(drop=True) 
+
         # ==========================================
         # VIGNETTES
         def has_value(val):
@@ -304,16 +377,8 @@ if st.session_state["lat"] is not None:
                         color:#999;">Pas d'image</div>""",
                         unsafe_allow_html=True
                     )
-        # --- Ajout de la date ---
-                if pd.notna(event["date_d"]):
-                    date_d_str = event["date_d"].strftime('%d/%m/%Y')
-                    if pd.notna(event["date_f"]) and event["date_f"] != event["date_d"]:
-                        date_f_str = f" → {event['date_f'].strftime('%d/%m/%Y')}"
-                    else:
-                        date_f_str = ""
-                    st.caption(f"📅 {date_d_str}{date_f_str}")
-                st.markdown(f"**{event['nom_event']}**")
 
+                st.markdown(f"**{event['nom_event']}**")
                 if has_value(event["theme"]):
                     st.caption(f"🏷️ {event['theme']}")
                 st.caption(f"📌 {event['adresse_complete']}")
@@ -322,8 +387,22 @@ if st.session_state["lat"] is not None:
                     st.write(desc[:150] + "..." if len(desc) > 150 else desc)
 
         if indices_selectionnes:
-            df_selection = df.loc[indices_selectionnes]
-            df_reste = df.drop(indices_selectionnes)
+                    # Sécurité : garder uniquement les index encore présents
+            indices_selectionnes = [
+                i for i in indices_selectionnes
+                if i in df.index
+            ]
+
+            if indices_selectionnes:
+                df_selection = df.loc[indices_selectionnes]
+                df_reste = df.drop(indices_selectionnes)
+
+                st.subheader(f"⭐ {len(df_selection)} événement(s) à cette adresse")
+
+            else:
+                df_selection = pd.DataFrame()
+                df_reste = df
+
 
             st.subheader(f"⭐ {len(df_selection)} événement(s) à cette adresse")
 
@@ -340,6 +419,7 @@ if st.session_state["lat"] is not None:
             st.divider()
             st.subheader(f"📍 Tous les événements ({len(df_reste)})")
         else:
+            df_selection = pd.DataFrame()
             df_reste = df
             #st.subheader(f"📍 {len(df_reste)} événements trouvés")
             st.subheader(f"📍 {len(df_reste)} evenements trouvées dans {len(st.session_state['liste_ville'])} villes")
