@@ -167,7 +167,7 @@ if st.session_state["cp"] is not None:
 if st.session_state["lat"] is not None:
     if st.session_state['liste_ville']:
                 
-        df = pd.read_csv("Airflow/data/df_final.csv")
+        df = pd.read_csv("data/f.csv")
         
 
         # DATA FILTRE PAR LES VILLES
