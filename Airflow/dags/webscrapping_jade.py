@@ -145,7 +145,7 @@ def scrape_events(): #fonction visant à scraper les evenements
     all_data = []
 
     departements = {
-        "01":"ain","02":"aisne","03":"allier","04":"alpes-de-haute-provence",
+        "01":"ain","02":"aisne", "03":"allier","04":"alpes-de-haute-provence",
         "05":"hautes-alpes","06":"alpes-maritimes","07":"ardeche","08":"ardennes",
         "09":"ariege","10":"aube","11":"aude","12":"aveyron","13":"bouches-du-rhone",
         "14":"calvados","15":"cantal","16":"charente","17":"charente-maritime",
