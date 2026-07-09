@@ -398,7 +398,15 @@ if st.session_state["lat"] is not None:
                         unsafe_allow_html=True
                     )
                 else:
+                    
+    
+
                     img = image_theme(event["theme"])
+
+                    st.write("Thème :", event["theme"])
+                    st.write("Image :", img)
+                    st.write("Existe ?", os.path.exists(img))
+
                     st.image(img, use_container_width=True)
                     
 
