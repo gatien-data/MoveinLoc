@@ -11,6 +11,7 @@ import ast
 from bs4 import BeautifulSoup
 import time
 import os
+from PIL import Image
 # ======================================
 # IMPORT DE L AGENT IA
 # ======================================
@@ -97,6 +98,21 @@ def image_theme(theme):
         nom = images.get(theme, "default.png")
 
         return os.path.join("Assets", "IMG_theme", nom)
+
+def resize_cover(img, size=(600,180)):
+    img = img.convert("RGB")
+    
+    ratio = max(size[0] / img.width, size[1] / img.height)
+    new_size = (int(img.width * ratio), int(img.height * ratio))
+    
+    img = img.resize(new_size)
+
+    left = (img.width - size[0]) // 2
+    top = (img.height - size[1]) // 2
+    
+    img = img.crop((left, top, left + size[0], top + size[1]))
+    
+    return img
 
 # ==========================================
 # AGENT IA
@@ -399,14 +415,8 @@ if st.session_state["lat"] is not None:
                         unsafe_allow_html=True
                     )
                 else:
-                    
-    
-
                     img = image_theme(event["theme"])
-
-                    st.write("Thème :", event["theme"])
-                    st.write("Image :", img)
-                    st.write("Existe ?", os.path.exists(img))
+                    img = resize_cover(img)
 
                     st.image(img, use_container_width=True)
                     
@@ -455,7 +465,7 @@ if st.session_state["lat"] is not None:
             df_selection = pd.DataFrame()
             df_reste = df
             #st.subheader(f"📍 {len(df_reste)} événements trouvés")
-            #st.subheader(f"📍 {len(df_reste)} evenements trouvées dans {len(st.session_state['liste_ville'])} villes")
+            st.subheader(f"📍 {len(df_reste)} evenements trouvées dans {len(st.session_state['liste_ville'])} villes")
         n_cols = 3
         cols = st.columns(n_cols)
         for i, (idx, event) in enumerate(df_reste.iterrows()):
