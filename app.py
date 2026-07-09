@@ -71,7 +71,7 @@ def villes_voisines(cp, rayon):
     except:
         return []
     
-    def image_theme(theme):
+def image_theme(theme):
         images = {
             "Fête nationale": "feu_artifice.png",
             "Fête patronale": "fete_patronale.png",
@@ -398,10 +398,12 @@ if st.session_state["lat"] is not None:
                         unsafe_allow_html=True
                     )
                 else:
+                    img = image_theme(event["theme"])
                     st.markdown(
-                        """<div style="width:100%; height:180px; background-color:#f0f0f0; 
-                        border-radius:8px; display:flex; align-items:center; justify-content:center; 
-                        color:#999;">Pas d'image</div>""",
+                        f"""
+                        <img src="{img}"
+                        style="width:100%; height:180px; object-fit:cover; border-radius:8px;">
+                        """,
                         unsafe_allow_html=True
                     )
 
