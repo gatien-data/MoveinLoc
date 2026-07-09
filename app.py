@@ -230,7 +230,7 @@ if st.session_state["cp"] is not None:
 if st.session_state["lat"] is not None:
     if st.session_state['liste_ville']:
                 
-        df = pd.read_csv("data/df_flanerbouger.csv")
+        df = pd.read_csv("data/df.csv")
         
         # ==========================================
         #                  WEBSCRAPPING
