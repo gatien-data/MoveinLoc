@@ -380,7 +380,7 @@ if st.session_state["lat"] is not None:
                 icon=folium.Icon(icon="info-sign")
                 ).add_to(m)
 
-        st.subheader(f"{len(df)} evenements trouvées dans {len(st.session_state['liste_ville'])} villes")
+        #st.subheader(f"{len(df)} evenements trouvées dans {len(st.session_state['liste_ville'])} villes")
 
         map_data = st_folium(m, width=700, height=500, key=f"carte_evenements_{st.session_state['carte_key']}")
         
