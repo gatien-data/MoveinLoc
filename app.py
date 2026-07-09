@@ -10,6 +10,7 @@ from datetime import datetime, timedelta, date
 import ast
 from bs4 import BeautifulSoup
 import time
+import os
 # ======================================
 # IMPORT DE L AGENT IA
 # ======================================
@@ -70,6 +71,32 @@ def villes_voisines(cp, rayon):
     except:
         return []
     
+    def image_theme(theme):
+        images = {
+            "Fête nationale": "feu_artifice.png",
+            "Fête patronale": "fete_patronale.png",
+            "Marché de Noël": "marche_noel.png",
+            "Marché": "marche.png",
+            "Brocante / Vide-grenier": "brocante.png",
+            "Concert": "concert.png",
+            "Festival": "festival.png",
+            "Sport": "sport.png",
+            "Visite": "visite.png",
+            "Exposition": "exposition.png",
+            "Atelier": "atelier.png",
+            "Spectacle": "spectacle.png",
+            "Enfants": "enfants.png",
+            "Foire": "foire.png",
+            "Fête": "fete.png",
+            "Dégustation": "degustation.png",
+            "Conférence / Débat": "conference.png",
+            "Solidarité": "solidarite.png",
+        }
+
+        nom = images.get(theme, "default.png")
+
+        return os.path.join("Assets", "IMG_theme", nom)
+
 # ==========================================
 # AGENT IA
 # ==========================================
