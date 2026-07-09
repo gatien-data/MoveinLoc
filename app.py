@@ -91,6 +91,7 @@ def image_theme(theme):
             "Dégustation": "degustation.png",
             "Conférence / Débat": "conference.png",
             "Solidarité": "solidarite.png",
+            "autre":"autre.png"
         }
 
         nom = images.get(theme, "default.png")
