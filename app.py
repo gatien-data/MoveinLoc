@@ -101,10 +101,9 @@ def image_theme(theme):
 
         return os.path.join("Assets", "IMG_theme", nom)
 
-def image_to_base64(img):
-    buffer = BytesIO()
-    img.save(buffer, format="PNG")
-    return base64.b64encode(buffer.getvalue()).decode()
+def image_to_base64(path):
+    with open(path, "rb") as image_file:
+        return base64.b64encode(image_file.read()).decode()
 
 
 def resize_cover(img, size=(600,180)):
