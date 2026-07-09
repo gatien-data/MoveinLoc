@@ -12,6 +12,8 @@ from bs4 import BeautifulSoup
 import time
 import os
 from PIL import Image
+import base64
+from io import BytesIO
 # ======================================
 # IMPORT DE L AGENT IA
 # ======================================
@@ -99,20 +101,30 @@ def image_theme(theme):
 
         return os.path.join("Assets", "IMG_theme", nom)
 
+def image_to_base64(img):
+    buffer = BytesIO()
+    img.save(buffer, format="PNG")
+    return base64.b64encode(buffer.getvalue()).decode()
+
+
 def resize_cover(img, size=(600,180)):
     img = img.convert("RGB")
-    
+
     ratio = max(size[0] / img.width, size[1] / img.height)
-    new_size = (int(img.width * ratio), int(img.height * ratio))
-    
+
+    new_size = (
+        int(img.width * ratio),
+        int(img.height * ratio)
+    )
+
     img = img.resize(new_size)
 
     left = (img.width - size[0]) // 2
     top = (img.height - size[1]) // 2
-    
-    img = img.crop((left, top, left + size[0], top + size[1]))
-    
-    return img
+
+    return img.crop(
+        (left, top, left + size[0], top + size[1])
+    )
 
 # ==========================================
 # AGENT IA
@@ -410,24 +422,26 @@ if st.session_state["lat"] is not None:
 
                 if has_value(event["url_image"]):
                     st.markdown(
-                        f"""<img src="{event['url_image']}" 
-                        style="width:100%; height:180px; object-fit:cover; border-radius:8px;">""",
+                        f"""
+                        <img src="{event['url_image']}" 
+                        style="width:100%; height:180px; object-fit:cover; border-radius:8px;">
+                        """,
                         unsafe_allow_html=True
                     )
+
                 else:
-                    #img = image_theme(event["theme"])
-                    #img = resize_cover(img)
-
-                    #st.image(img, use_container_width=True)
-            
-            
-                    img_path = image_theme(event["theme"])
-
-                    img = Image.open(img_path)
-
+                    img = Image.open(image_theme(event["theme"]))
                     img = resize_cover(img)
 
-                    st.image(img, use_container_width=True)
+                    img_base64 = image_to_base64(img)
+
+                    st.markdown(
+                        f"""
+                        <img src="data:image/png;base64,{img_base64}"
+                        style="width:100%; height:180px; object-fit:cover; border-radius:8px;">
+                        """,
+                        unsafe_allow_html=True
+                    )
 
                 st.markdown(f"**{event['nom_event']}**")
                 if has_value(event["theme"]):
