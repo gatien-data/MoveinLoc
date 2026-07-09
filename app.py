@@ -415,11 +415,14 @@ if st.session_state["lat"] is not None:
                         unsafe_allow_html=True
                     )
                 else:
-                    img = image_theme(event["theme"])
-                    img = resize_cover(img)
+                    #img = image_theme(event["theme"])
+                    #img = resize_cover(img)
 
-                    st.image(img, use_container_width=True)
-                    
+                    #st.image(img, use_container_width=True)
+            
+                    img = image_theme(event["theme"])
+                    st.write(type(img))
+                    st.write(img)
 
                 st.markdown(f"**{event['nom_event']}**")
                 if has_value(event["theme"]):
