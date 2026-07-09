@@ -397,7 +397,7 @@ if st.session_state["lat"] is not None:
                 df_selection = df.loc[indices_selectionnes]
                 df_reste = df.drop(indices_selectionnes)
 
-                st.subheader(f"⭐ {len(df_selection)} événement(s) à cette adresse")
+                #st.subheader(f"⭐ {len(df_selection)} événement(s) à cette adresse")
 
             else:
                 df_selection = pd.DataFrame()
