@@ -422,7 +422,7 @@ if st.session_state["lat"] is not None:
             df_selection = pd.DataFrame()
             df_reste = df
             #st.subheader(f"📍 {len(df_reste)} événements trouvés")
-            st.subheader(f"📍 {len(df_reste)} evenements trouvées dans {len(st.session_state['liste_ville'])} villes")
+            #st.subheader(f"📍 {len(df_reste)} evenements trouvées dans {len(st.session_state['liste_ville'])} villes")
         n_cols = 3
         cols = st.columns(n_cols)
         for i, (idx, event) in enumerate(df_reste.iterrows()):
