@@ -1,0 +1,8 @@
+[theme]
+base="dark"
+primaryColor="dodgerblue"
+baseFontSize=14
+
+
+[theme.sidebar]
+primaryColor="darkGoldrod"
