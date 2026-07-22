@@ -5,12 +5,13 @@
 
 url_recherche = "https://docs.google.com/spreadsheets/d/1Dtf6QVMgHngi7Zw67WaPKQBU29TouM3yuDpeLJaETG0/edit?gid=1610249261#gid=1610249261"
 
-url_ppt = ""
+url_ppt = "https://docs.google.com/presentation/d/1vPlbayyOVFmVTTnuFHTvuCgU8VwVJjW-DOcg_deUnxc/edit?slide=id.g3f46a71808a_0_304#slide=id.g3f46a71808a_0_304"
 
 url_kaban = "https://canva.link/7i45p78tpxakjoo"
 
 url_git = "https://github.com/gatien-data/MoveinLoc.git"
 
+url_appli = "https://moveinloc-dufzpymuyebzzciz5xbzsx.streamlit.app/"
 
 
 # ------------ USER STORY ------------
