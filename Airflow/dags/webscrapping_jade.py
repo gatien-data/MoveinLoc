@@ -699,7 +699,7 @@ def concat_df():
         return None
 
 
-    df["coor"] = df["adresse complete"].apply(getcoordinates)
+    df["coor"] = df["adresse_complete"].apply(getcoordinates)
     df = df.drop_duplicates(subset=["nom_event"])
     df.to_csv("/opt/airflow/data/events.csv", index=False)
 
